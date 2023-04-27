@@ -93,8 +93,7 @@ if($con->query($scp_insert) == TRUE){
     if($con->query($log_insert) == TRUE && $valid==1){
 
         header("Location: courseOutcomeForm.php?response=200");
-        $newtmo=$scp ['tmo'];
-        print $newtmo+'% acheived for all CO';
+        
  }
  else{      
          header("Location: courseOutcomeForm.php?response=501");

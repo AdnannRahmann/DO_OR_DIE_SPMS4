@@ -8,33 +8,40 @@
   $year  = $_POST['year'];
   $semester = $_POST['semester'];
   $course = $_POST['course'];
-  $percentage =NULL;
-  $time = NULL;
+  $regID= NULL;
+
   $valid = 1;
+  // print $studentID; print ' ';
 
   $section_check = $con->query("SELECT * FROM section_t WHERE courseID = '$course' 
-  AND year = '$year' AND semester = '$semester'")->fetch_assoc();
+  AND year = '$year' AND semester = '$semester'");
 
      
-if($section_check != NULL){
+  if($section_check != NULL){
 
-    $secID = $section_check['sectionID'];
 
-    $reg_check = $con->query("SELECT * FROM registration_t WHERE sectionID = '$secID' AND studentID = '$studentID'")->fetch_assoc();
+    while($rows=$section_check->fetch_assoc())
+      {
+        $x =$rows['sectionID'];
+        $reg_check = $con->query("SELECT * FROM registration_t WHERE sectionID = '$x'");
+        while($rows=$reg_check->fetch_assoc()){
+          // echo $rows['studentID']; echo " ";
+              if($rows['studentID'] == $studentID){
+                $regID= $rows['registrationID'];
+              };
+        }
+      }          
 
-    if($reg_check ==  NULL){
-        $valid = 0;
-    }
-    else{
-        $regID = $reg_check['registrationID']; 
-        $regID = 48;
+    
+
         $scp_check = $con->query("SELECT * FROM student_course_performance_t WHERE registrationID = '$regID'")->fetch_assoc();
+
         $percentage = $scp_check['totalMarksObtained'];
         $scpID = $scp_check['scpID'];
-        $spl_check = $con->query("SELECT * FROM student_perf_log_t WHERE scpID ='$scpID' AND 'registrationID = '$regID'")->fetch_assoc();
-        $time = $spl_check['time'];
+         $spl_check = $con->query("SELECT * FROM student_perf_log_t WHERE scpID ='$scpID' AND registrationID = '$regID'")->fetch_assoc();
+         $time = $spl_check['time'];
 
-    }
+    
 }
 else{
     $valid = 0;
@@ -78,7 +85,7 @@ else{
                 <br>
             <div class="left-navigation">
               <ul class="list">
-                <li><a href="employee_dashboard.php" target="_self">Home</a></li>
+                <li><a href="#" target="_self">Dashboard</a></li>
                         
                 </ul>
 
@@ -93,7 +100,6 @@ else{
                   <li><a href="enrollmentStatistics.php" target="_self">Enrollment Stats</a></li>
                   <li><a href="performanceStats.php" target="_self">GPA Analysis</a></li>
                   <li><a href="courseOutcomeForm.php" target="_self">Course Outcome</a></li>
-                  <li><a href="viewCO.php" target="_self">View Course Outcome</a></li>
                 </ul>
                        
                 <br>
@@ -109,9 +115,17 @@ else{
                 <!--Main content code to be written here --> 
                 
 
-<h1><?php print $percentage; 
-print $time?></h1>
-                
+<h1><?php 
+echo $percentage . "% achieved in all CO's" . " in ".$course." by student: ".$studentID;
+
+
+
+?></h1>
+        <h2><?php 
+echo "Student Performance Data was submitted on: ".$time;
+
+
+?></h2>        
         
         </div>
     </div>

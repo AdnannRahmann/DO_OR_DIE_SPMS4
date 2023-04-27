@@ -102,7 +102,7 @@
                 <button type="button" aria-hidden="true" class="close">
                   <i class="now-ui-icons ui-1_simple-remove"></i>
                 </button>
-                <span><b> Working on the implementation, data saved to database.</span>
+                <span><b> Student Performance Data Stored to database. Go to View course outcome to see CO percentage Achieved in ALL CO's</span>
               </div>
 
               <div class="alert alert-danger" <?php if(isset($_GET['response']) && $_GET['response'] == 501){}else{echo "hidden";} ?>>
